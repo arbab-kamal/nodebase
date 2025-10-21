@@ -7,7 +7,7 @@ import { getQueryClient, trpc } from '@/trpc/server'
 
 const Page = async () => {
   const queryClient =  getQueryClient()
-  void queryClient.prefetchQuery(trpc.getUsers.queryOptions())
+  await queryClient.prefetchQuery(trpc.getUsers.queryOptions());
   return (
     <div>
       <HydrationBoundary state={dehydrate(queryClient)}>
