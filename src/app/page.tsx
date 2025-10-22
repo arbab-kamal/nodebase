@@ -1,25 +1,47 @@
-"use client"
-import Logout from "./logout";
+"use client";
+
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import Logout from "./logout";
 import { Button } from "@/components/ui/button";
+import { QueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const Page = () => {
   const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  const { data: workflows } = useQuery(trpc.getWorkflows.queryOptions());
+  const queryClient = new QueryClient();
+  const { data } = useQuery(trpc.getWorkflows.queryOptions());
+
+  const testAi = useMutation(trpc.testAi.mutationOptions({
+    onSuccess: () => {
+      toast("AI Job Queued");
+    },
+  }));
+
   const create = useMutation(trpc.createWorkflow.mutationOptions({
     onSuccess: () => {
-      queryClient.invalidateQueries(trpc.getWorkflows.queryOptions())
-    }
-  }))
+      toast("Workflow Job Queued");
+    },
+  }));
 
-  return <div className="flex flex-col justify-center items-center gap-10">
-    <div>Protected Server Component</div>
-    <div>{JSON.stringify(workflows)}</div>
-    <Button onClick={() => create.mutate()} disabled={create.isPending}>Create Workflow</Button>
-    <Logout />
-  </div>;
+  return (
+    <div className="min-h-screen min-w-screen flex items-center justify-center flex-col gap-y-6">
+
+      protected server component
+      <div>
+        {JSON.stringify(data, null, 2)}
+      </div>
+      <Button disabled={testAi.isPending} onClick=
+        {() => testAi.mutate()}> Test AI
+      </Button>
+      <Button disabled={create.isPending} onClick=
+        {() => create.mutate()}>
+
+        Create workflow
+      </Button>
+      <Logout />
+    </div>
+  );
 };
 
 export default Page;
