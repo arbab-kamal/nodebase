@@ -16,6 +16,9 @@ const Page = () => {
     onSuccess: () => {
       toast("AI Job Queued");
     },
+    onError: () => {
+      toast.error("AI Endpoint Not Implemented");
+    }
   }));
 
   const create = useMutation(trpc.createWorkflow.mutationOptions({
