@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
       destination: "/workflows",
       permanent: false,
     },
+   
+
   ];
+  
+  
 }
 
 
