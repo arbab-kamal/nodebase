@@ -1,29 +1,28 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardTitle, CardHeader } from "@/components/ui/card";
+import { z } from "zod";
+import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
-import { useTransition } from "react";
 
 const registerSchema = z.object({
     email: z.string().email("Please enter a valid email address"),
     password: z.string().min(6, "Password must be at least 6 characters long"),
     confirmPassword: z.string(),
 })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Password and Confirm Password don't match",
-        path: ["confirmPassword"]
-    });
+.refine(data => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+});
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
@@ -36,17 +35,18 @@ export function RegisterForm() {
         defaultValues: {
             email: "",
             password: "",
-            confirmPassword: ""
+            confirmPassword: "",
         },
     });
 
-    const onSubmit = async (value: RegisterFormValues) => {
+    const onSubmit = async (values: RegisterFormValues) => {
         try {
             await authClient.signUp.email(
                 {
-                    name: value.email,
-                    email: value.email,
-                    password: value.password,
+                    email: values.email,
+                    password: values.password,
+                    name: values.email,
+                    callbackURL: "/",
                 },
                 {
                     onSuccess: () => {
@@ -59,8 +59,15 @@ export function RegisterForm() {
                         });
                     },
                     onError: (ctx) => {
-                        toast.error(ctx.error.message ?? "Failed to create account");
-                    }
+                        // Handle specific Polar customer exists error
+                        if (ctx.error.message.includes("customer with this email address already exists")) {
+                            toast.error("This email is already registered. Please login instead.");
+                            // Optionally redirect to login
+                            router.push("/login");
+                        } else {
+                            toast.error(ctx.error.message ?? "Failed to register");
+                        }
+                    },
                 }
             );
         } catch (error) {
@@ -68,7 +75,7 @@ export function RegisterForm() {
         }
     };
 
-    const handleGoogleSignUp = async () => {
+    const handleGoogleSignup = async () => {
         try {
             await authClient.signIn.social(
                 {
@@ -93,7 +100,7 @@ export function RegisterForm() {
         }
     };
 
-    const handleGitHubSignUp = async () => {
+    const handleGitHubSignup = async () => {
         try {
             await authClient.signIn.social(
                 {
@@ -124,8 +131,8 @@ export function RegisterForm() {
         <div className="flex flex-col gap-6 w-2/5 min-w-80">
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle>Get Started</CardTitle>
-                    <CardDescription>Create your account to get started</CardDescription>
+                    <CardTitle>Create an account</CardTitle>
+                    <CardDescription>Register to continue</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
@@ -137,7 +144,7 @@ export function RegisterForm() {
                                         disabled={isLoading} 
                                         className="w-full" 
                                         type="button"
-                                        onClick={handleGitHubSignUp}
+                                        onClick={handleGitHubSignup}
                                     >
                                         <Image alt="GitHub" src="/logos/github.svg" width={20} height={20} />
                                         Continue with GitHub
@@ -147,13 +154,13 @@ export function RegisterForm() {
                                         disabled={isLoading} 
                                         className="w-full" 
                                         type="button"
-                                        onClick={handleGoogleSignUp}
+                                        onClick={handleGoogleSignup}
                                     >
                                         <Image alt="Google" src="/logos/google.svg" width={20} height={20} />
                                         Continue with Google
                                     </Button>
                                 </div>
-
+                                
                                 <div className="relative">
                                     <div className="absolute inset-0 flex items-center">
                                         <span className="w-full border-t" />
@@ -166,66 +173,66 @@ export function RegisterForm() {
                                 </div>
 
                                 <div className="grid gap-6">
-                                    <FormField 
-                                        control={form.control} 
-                                        name="email" 
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Email</FormLabel>
                                                 <FormControl>
                                                     <Input 
-                                                        type="email" 
-                                                        placeholder="abc@example.com" 
-                                                        disabled={isLoading} 
-                                                        {...field} 
+                                                        type="email"
+                                                        placeholder="abc@example.com"
+                                                        disabled={isLoading}
+                                                        {...field}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
-                                        )} 
+                                        )}
                                     />
-                                    <FormField 
-                                        control={form.control} 
-                                        name="password" 
+                                    <FormField
+                                        control={form.control}
+                                        name="password"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Password</FormLabel>
                                                 <FormControl>
                                                     <Input 
-                                                        type="password" 
-                                                        placeholder="***********" 
-                                                        disabled={isLoading} 
-                                                        {...field} 
+                                                        type="password"
+                                                        placeholder="***********"
+                                                        disabled={isLoading}
+                                                        {...field}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
-                                        )} 
+                                        )}
                                     />
-                                    <FormField 
-                                        control={form.control} 
-                                        name="confirmPassword" 
+                                    <FormField
+                                        control={form.control}
+                                        name="confirmPassword"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Confirm Password</FormLabel>
                                                 <FormControl>
                                                     <Input 
-                                                        type="password" 
-                                                        placeholder="***********" 
-                                                        disabled={isLoading} 
-                                                        {...field} 
+                                                        type="password"
+                                                        placeholder="***********"
+                                                        disabled={isLoading}
+                                                        {...field}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
-                                        )} 
+                                        )}
                                     />
                                     <Button 
                                         type="submit" 
                                         className="w-full" 
                                         disabled={isLoading}
                                     >
-                                        {isLoading ? "Creating account..." : "Sign Up"}
+                                        {isLoading ? "Creating account..." : "Register"}
                                     </Button>
                                     <div className="text-center text-sm">
                                         Already have an account?{" "}

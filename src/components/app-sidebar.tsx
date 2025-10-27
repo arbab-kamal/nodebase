@@ -57,7 +57,7 @@ export const AppSidebar = () => {
       <SidebarHeader>
         <SidebarMenuButton asChild className="gap-x-4 h-12 px-4">
           <Link href="/workflows" prefetch>
-            <Image src="logos/nodebase_icon.svg" alt="NodeBase" width={32} height={32} />
+            <Image src="/logos/nodebase_icon.svg" alt="NodeBase" width={32} height={32} />
             <span className="text-sm font-semibold">NodeBase</span>
           </Link>
         </SidebarMenuButton>
