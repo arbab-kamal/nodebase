@@ -1,43 +1,42 @@
-Nodebase – Next.js Workflow App Starter
+# Nodebase – Next.js Workflow App Starter
 
-A Next.js (App Router) starter kit built for workflow-driven applications.
-Includes modern integrations for AI APIs, background jobs, and typed APIs out of the box.
+A **Next.js (App Router)** starter kit for building **workflow-driven applications**.  
+Includes pre-configured integrations for **AI APIs**, **background jobs**, and **typed APIs** using modern tooling.
 
-⚙️ Tech Stack
+---
 
-Next.js 15 + React 19
+## ⚙️ Tech Stack
 
-TypeScript
+- **Next.js 15** + **React 19**
+- **TypeScript**
+- **Prisma** (PostgreSQL)
+- **Inngest** — background jobs & event workflows
+- **tRPC** — type-safe APIs
+- **Tailwind CSS** + **Radix UI**
+- **Sentry** — observability and monitoring
+- **Biome** — linting and formatting
+- Optional **AI SDKs:** OpenAI, Google, Anthropic
 
-Prisma (PostgreSQL)
+---
 
-Inngest — serverless & background workflows
+## 🚀 Quick Start
 
-tRPC — type-safe API communication
+### Prerequisites
 
-Tailwind CSS + Radix UI
+- **Node.js** v18+
+- **pnpm** (recommended)
+- **PostgreSQL** database
 
-Sentry — observability and error tracking
+---
 
-Biome — linting and formatting
+### 1. Install dependencies
 
-Optional AI SDKs: OpenAI, Google, Anthropic
-
-🚀 Quick Start
-Prerequisites
-
-Node.js 18 or higher
-
-pnpm (recommended)
-
-PostgreSQL database
-
-1. Install dependencies
+```bash
 pnpm install
 
 2. Configure environment variables
 
-Create a .env file in the project root (copy from .env.example if available) and set:
+Create a .env file in the project root (or copy from .env.example) and set:
 
 # ─────── ENVIRONMENT VARIABLES ───────
 
@@ -74,110 +73,90 @@ GOOGLE_CLIENT_SECRET=
 # ── Inngest (Background Jobs) ──
 INNGEST_WEBHOOK_SECRET=
 
+3. Initialize the database
 
-Note: Never commit .env files to version control.
-
-3. Set up the database
-
-Run Prisma migrations and generate the client:
-
+Run Prisma migrations and generate the Prisma client:
 pnpm prisma migrate dev --name init
 pnpm prisma generate
-
-
 To open Prisma Studio:
-
 pnpm prisma studio
 
 4. Start the development server
+
 pnpm dev
-
-
-Visit http://localhost:3000
-.
-
 📂 Folder Structure
-Folder	Purpose
+Folder	Description
 app/	Next.js App Router pages, layouts, and API routes
-src/components/	UI and shared components
-src/lib/	Utility functions, DB clients, auth helpers
-src/inngest/	Background job definitions and workflows
-src/trpc/	tRPC routers and client setup
-prisma/	Schema and migrations
+src/components/	Shared and UI components
+src/lib/	Utilities, database clients, and authentication helpers
+src/inngest/	Inngest client setup and function definitions
+src/trpc/	tRPC routers and client initialization
+prisma/	Prisma schema and database migrations
 public/	Static assets
 🧩 Available Scripts
 Command	Description
-pnpm dev	Run development server (Turbopack)
-pnpm build	Build for production
-pnpm start	Start production server
-pnpm lint	Run Biome linter
-pnpm format	Auto-format code
-pnpm prisma migrate reset	Drop and recreate local database (⚠️ destructive)
+pnpm dev	Start development server (Turbopack)
+pnpm build	Build app for production
+pnpm start	Run the production build
+pnpm lint	Lint code using Biome
+pnpm format	Auto-format code with Biome
+pnpm prisma migrate reset	Drop and recreate local database (Destructive)
 🔄 Inngest Integration
 
-Inngest powers background jobs and event-driven workflows.
+Inngest handles event-driven workflows and background jobs.
 
-Define jobs under src/inngest/functions.ts.
+Define your jobs in src/inngest/functions.ts
 
-Use the Inngest CLI
- to test locally:
-
+Run or test Inngest locally with the CLI:
 pnpm inngest dev
-
-
 Set INNGEST_WEBHOOK_SECRET for secure local testing.
-
 🧠 tRPC
 
-Typed server–client procedures for safe and efficient API calls.
-Server routers live in src/trpc/routers; client setup in src/trpc/client.tsx.
+tRPC provides end-to-end type safety between server and client.
+
+Server routers live under src/trpc/routers
+
+Client configuration: src/trpc/client.tsx
 
 🧱 Observability (Sentry)
 
-Sentry is integrated for both server and edge monitoring.
-Configure via environment variables:
-
-SENTRY_AUTH_TOKEN
-
-NEXT_PUBLIC_SENTRY_DSN
-
-SENTRY_ORG
-
-SENTRY_PROJECT
-
+Sentry is integrated for both server and edge error monitoring.
+Set the following environment variables:
+SENTRY_AUTH_TOKEN=
+NEXT_PUBLIC_SENTRY_DSN=
+SENTRY_ORG=
+SENTRY_PROJECT=
 🧪 Testing
 
-This project does not ship with tests by default.
-Recommended additions:
+No testing framework is included by default.
+Recommended options:
 
 Vitest
- or Jest
 
-CI pipeline for pull requests
+Jest
+
+Add a simple CI workflow to automate pull request checks.
 
 🚢 Deployment
 
-Deploy easily to:
+Supports deployment to:
 
-Vercel (recommended)
+Vercel
+ (recommended)
 
-Fly.io, Render, or any Node host
+Render, Fly.io, or any Node.js-compatible host
 
-Ensure all environment variables are set on your hosting platform.
-Run:
-
+Before deploying:
 pnpm build
 pnpm start
+Ensure all environment variables are configured in your hosting platform.
 
 🤝 Contributing
 
-Fork or open a pull request with focused changes.
+Fork the repository.
+
+Create a new feature branch.
 
 Run pnpm lint and pnpm format before committing.
 
-Document any architectural changes.
-
-🪪 License
-
-Add a LICENSE file to clarify terms if the repository will be public.
-For private repositories, document access and usage rights internally.
+Open a pull request with a clear description.
