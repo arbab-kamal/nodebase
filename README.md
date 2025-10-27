@@ -1,36 +1,183 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Nodebase – Next.js Workflow App Starter
 
-## Getting Started
+A Next.js (App Router) starter kit built for workflow-driven applications.
+Includes modern integrations for AI APIs, background jobs, and typed APIs out of the box.
 
-First, run the development server:
+⚙️ Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+Next.js 15 + React 19
+
+TypeScript
+
+Prisma (PostgreSQL)
+
+Inngest — serverless & background workflows
+
+tRPC — type-safe API communication
+
+Tailwind CSS + Radix UI
+
+Sentry — observability and error tracking
+
+Biome — linting and formatting
+
+Optional AI SDKs: OpenAI, Google, Anthropic
+
+🚀 Quick Start
+Prerequisites
+
+Node.js 18 or higher
+
+pnpm (recommended)
+
+PostgreSQL database
+
+1. Install dependencies
+pnpm install
+
+2. Configure environment variables
+
+Create a .env file in the project root (copy from .env.example if available) and set:
+
+# ─────── ENVIRONMENT VARIABLES ───────
+
+# ── AI Provider Keys ──
+GOOGLE_GENERATIVE_AI_API_KEY=
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+
+# ── Authentication & App Config ──
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
+
+# ── Payment & Subscription ──
+POLAR_ACCESS_TOKEN=
+POLAR_PRO_PRODUCT_ID=
+POLAR_SUCCESS_URL=http://localhost:3000
+
+# ── Database ──
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/your_database"
+
+# ── Sentry Monitoring ──
+SENTRY_AUTH_TOKEN=
+NEXT_PUBLIC_SENTRY_DSN=
+SENTRY_ORG=
+SENTRY_PROJECT=
+
+# ── OAuth (Social Logins) ──
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+# ── Inngest (Background Jobs) ──
+INNGEST_WEBHOOK_SECRET=
+
+
+Note: Never commit .env files to version control.
+
+3. Set up the database
+
+Run Prisma migrations and generate the client:
+
+pnpm prisma migrate dev --name init
+pnpm prisma generate
+
+
+To open Prisma Studio:
+
+pnpm prisma studio
+
+4. Start the development server
 pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Visit http://localhost:3000
+.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+📂 Folder Structure
+Folder	Purpose
+app/	Next.js App Router pages, layouts, and API routes
+src/components/	UI and shared components
+src/lib/	Utility functions, DB clients, auth helpers
+src/inngest/	Background job definitions and workflows
+src/trpc/	tRPC routers and client setup
+prisma/	Schema and migrations
+public/	Static assets
+🧩 Available Scripts
+Command	Description
+pnpm dev	Run development server (Turbopack)
+pnpm build	Build for production
+pnpm start	Start production server
+pnpm lint	Run Biome linter
+pnpm format	Auto-format code
+pnpm prisma migrate reset	Drop and recreate local database (⚠️ destructive)
+🔄 Inngest Integration
 
-## Learn More
+Inngest powers background jobs and event-driven workflows.
 
-To learn more about Next.js, take a look at the following resources:
+Define jobs under src/inngest/functions.ts.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Use the Inngest CLI
+ to test locally:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+pnpm inngest dev
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Set INNGEST_WEBHOOK_SECRET for secure local testing.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🧠 tRPC
+
+Typed server–client procedures for safe and efficient API calls.
+Server routers live in src/trpc/routers; client setup in src/trpc/client.tsx.
+
+🧱 Observability (Sentry)
+
+Sentry is integrated for both server and edge monitoring.
+Configure via environment variables:
+
+SENTRY_AUTH_TOKEN
+
+NEXT_PUBLIC_SENTRY_DSN
+
+SENTRY_ORG
+
+SENTRY_PROJECT
+
+🧪 Testing
+
+This project does not ship with tests by default.
+Recommended additions:
+
+Vitest
+ or Jest
+
+CI pipeline for pull requests
+
+🚢 Deployment
+
+Deploy easily to:
+
+Vercel (recommended)
+
+Fly.io, Render, or any Node host
+
+Ensure all environment variables are set on your hosting platform.
+Run:
+
+pnpm build
+pnpm start
+
+🤝 Contributing
+
+Fork or open a pull request with focused changes.
+
+Run pnpm lint and pnpm format before committing.
+
+Document any architectural changes.
+
+🪪 License
+
+Add a LICENSE file to clarify terms if the repository will be public.
+For private repositories, document access and usage rights internally.
