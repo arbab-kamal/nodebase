@@ -1,43 +1,42 @@
-Nodebase – Next.js Workflow App Starter
+# Nodebase – Next.js Workflow App Starter
 
-A Next.js (App Router) starter kit built for workflow-driven applications.
-Includes modern integrations for AI APIs, background jobs, and typed APIs out of the box.
+A **Next.js (App Router)** starter kit for building **workflow-driven applications**.  
+Includes pre-configured integrations for **AI APIs**, **background jobs**, and **typed APIs** using modern tooling.
 
-⚙️ Tech Stack
+---
 
-Next.js 15 + React 19
+## ⚙️ Tech Stack
 
-TypeScript
+- **Next.js 15** + **React 19**
+- **TypeScript**
+- **Prisma** (PostgreSQL)
+- **Inngest** — background jobs & event workflows
+- **tRPC** — type-safe APIs
+- **Tailwind CSS** + **Radix UI**
+- **Sentry** — observability and monitoring
+- **Biome** — linting and formatting
+- Optional **AI SDKs:** OpenAI, Google, Anthropic
 
-Prisma (PostgreSQL)
+---
 
-Inngest — serverless & background workflows
+## 🚀 Quick Start
 
-tRPC — type-safe API communication
+### Prerequisites
 
-Tailwind CSS + Radix UI
+- **Node.js** v18+
+- **pnpm** (recommended)
+- **PostgreSQL** database
 
-Sentry — observability and error tracking
+---
 
-Biome — linting and formatting
+### 1. Install dependencies
 
-Optional AI SDKs: OpenAI, Google, Anthropic
-
-🚀 Quick Start
-Prerequisites
-
-Node.js 18 or higher
-
-pnpm (recommended)
-
-PostgreSQL database
-
-1. Install dependencies
+```bash
 pnpm install
 
 2. Configure environment variables
 
-Create a .env file in the project root (copy from .env.example if available) and set:
+Create a .env file in the project root (or copy from .env.example) and set:
 
 # ─────── ENVIRONMENT VARIABLES ───────
 
@@ -139,137 +138,115 @@ GOOGLE_CLIENT_SECRET=
 INNGEST_WEBHOOK_SECRET=
 ```
 
-### 3) Set up the database
+
+Note: Never commit .env files to version control.
+
+3. Set up the database
 
 Run Prisma migrations and generate the client:
 
-```powershell
 pnpm prisma migrate dev --name init
 pnpm prisma generate
-```
 
-Open Prisma Studio:
 
-```powershell
+To open Prisma Studio:
+
 pnpm prisma studio
 ```
 
 ### 4) Start the development server
 
-```powershell
+4. Start the development server
 pnpm dev
-```
 
-Open http://localhost:3000 in your browser.
 
----
+Visit http://localhost:3000
+.
 
-## 📂 Folder overview
+📂 Folder Structure
+Folder	Purpose
+app/	Next.js App Router pages, layouts, and API routes
+src/components/	UI and shared components
+src/lib/	Utility functions, DB clients, auth helpers
+src/inngest/	Background job definitions and workflows
+src/trpc/	tRPC routers and client setup
+prisma/	Schema and migrations
+public/	Static assets
+🧩 Available Scripts
+Command	Description
+pnpm dev	Run development server (Turbopack)
+pnpm build	Build for production
+pnpm start	Start production server
+pnpm lint	Run Biome linter
+pnpm format	Auto-format code
+pnpm prisma migrate reset	Drop and recreate local database (⚠️ destructive)
+🔄 Inngest Integration
 
-This is a partial map of important folders:
+Inngest powers background jobs and event-driven workflows.
 
-| Path | Purpose |
-|------|---------|
-| `app/` | Next.js App Router pages, layouts, and API routes |
-| `src/components/` | UI and shared components |
-| `src/lib/` | Utilities, DB clients, auth helpers |
-| `src/inngest/` | Inngest client and function definitions |
-| `src/trpc/` | tRPC routers and client initialization |
-| `prisma/` | Prisma schema and migrations |
-| `public/` | Static assets |
+Define jobs under src/inngest/functions.ts.
 
----
+Use the Inngest CLI
+ to test locally:
 
-## 🧩 Available scripts
+pnpm inngest dev
 
-Check `package.json` for the exact scripts, but common commands include:
 
-- `pnpm dev` — start development server
-- `pnpm build` — build for production
-- `pnpm start` — run production build
-- `pnpm lint` — run Biome linter
-- `pnpm format` — format code with Biome
-- `pnpm prisma migrate reset` — reset local DB (destructive)
+Set INNGEST_WEBHOOK_SECRET for secure local testing.
 
-Run scripts with:
+🧠 tRPC
 
-```powershell
-pnpm run <script>
-```
-
----
-
-## 🔄 Inngest (background jobs)
-
-Inngest powers background jobs and event-driven workflows. Define jobs under `src/inngest/functions.ts`.
-
-To test/run Inngest locally use the Inngest CLI (installed as `inngest` or `inngest-cli`):
-
-```powershell
-pnpm dlx inngest-cli@latest dev
-```
-
-Set `INNGEST_WEBHOOK_SECRET` when testing webhooks locally.
-
----
-
-## 🧠 tRPC
-
-tRPC provides type-safe server-to-client procedures. Server routers are under `src/trpc/routers` and the client setup lives at `src/trpc/client.tsx`.
+Typed server–client procedures for safe and efficient API calls.
+Server routers live in src/trpc/routers; client setup in src/trpc/client.tsx.
 
 ---
 
 ## 🧱 Observability (Sentry)
 
-Sentry is configured for server and edge monitoring. Configure Sentry using the environment variables listed above (DSN, auth token, org, project).
+Sentry is integrated for both server and edge monitoring.
+Configure via environment variables:
 
----
+SENTRY_AUTH_TOKEN
 
-## 🧪 Testing
+NEXT_PUBLIC_SENTRY_DSN
 
-This repository does not include a test framework by default. Recommended additions:
+SENTRY_ORG
 
-- Vitest — fast, Vite-friendly test runner
-- Jest — familiar test runner with rich ecosystem
+SENTRY_PROJECT
 
-Add a CI workflow to run tests and linting on pull requests.
+🧪 Testing
 
----
+This project does not ship with tests by default.
+Recommended additions:
 
-## 🚢 Deployment
+Vitest
+ or Jest
 
-Deploy to Vercel (recommended) or any Node-compatible host (Render, Fly.io, etc.). Ensure all required environment variables are set in your host.
+CI pipeline for pull requests
 
-Typical deploy steps:
+🚢 Deployment
 
-```powershell
+Deploy easily to:
+
+Vercel (recommended)
+
+Fly.io, Render, or any Node host
+
+Ensure all environment variables are set on your hosting platform.
+Run:
+
 pnpm build
 pnpm start
-```
 
----
+🤝 Contributing
 
-## 🤝 Contributing
+Fork or open a pull request with focused changes.
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Run `pnpm lint` and `pnpm format` before committing.
-4. Open a PR with a clear description and tests if applicable.
+Run pnpm lint and pnpm format before committing.
 
-Please document architectural changes and database migrations in PR descriptions.
+Document any architectural changes.
 
----
+🪪 License
 
-## 🪪 License
-
-Add a `LICENSE` file if you plan to make this repository public. If it's private, document access and usage internally.
-
----
-
-If you'd like, I can also:
-
-- Add a `.env.example` file with the recommended variables filled in (safely)
-- Add a `dev:setup` script to `package.json` that runs migrations + dev server
-- Create a basic `CONTRIBUTING.md` and PR template
-
-Tell me which of those you'd like next and I will add them.
+Add a LICENSE file to clarify terms if the repository will be public.
+For private repositories, document access and usage rights internally.
