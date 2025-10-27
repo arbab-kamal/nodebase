@@ -61,55 +61,20 @@ export function LoginForm() {
         }
     };
 
-    const handleGoogleLogin = async () => {
-        try {
-            await authClient.signIn.social(
-                {
-                    provider: "google",
-                    callbackURL: "/",
-                },
-                {
-                    onSuccess: () => {
-                        toast.success("Logged in with Google!");
-                        startTransition(() => {
-                            router.refresh();
-                            router.replace("/");
-                        });
-                    },
-                    onError: (ctx) => {
-                        toast.error(ctx.error.message ?? "Failed to login with Google");
-                    }
-                }
-            );
-        } catch (error) {
-            toast.error("An unexpected error occurred");
-        }
+    const handleSocialLogin = async (provider: "github" | "google") => {
+        await authClient.signIn.social({
+            provider,
+            callbackURL: "/",
+        }, {
+            onSuccess: () => {
+                router.push("/");
+            },
+            onError: (ctx) => {
+                toast.error(ctx.error.message);
+            },
+        });
     };
 
-    const handleGitHubLogin = async () => {
-        try {
-            await authClient.signIn.social(
-                {
-                    provider: "github",
-                    callbackURL: "/",
-                },
-                {
-                    onSuccess: () => {
-                        toast.success("Logged in with GitHub!");
-                        startTransition(() => {
-                            router.refresh();
-                            router.replace("/");
-                        });
-                    },
-                    onError: (ctx) => {
-                        toast.error(ctx.error.message ?? "Failed to login with GitHub");
-                    }
-                }
-            );
-        } catch (error) {
-            toast.error("An unexpected error occurred");
-        }
-    };
 
     const isLoading = isPending || form.formState.isSubmitting;
 
@@ -130,7 +95,7 @@ export function LoginForm() {
                                         disabled={isLoading} 
                                         className="w-full" 
                                         type="button"
-                                        onClick={handleGitHubLogin}
+                                        onClick={() => handleSocialLogin("github")}
                                     >
                                         <Image alt="GitHub" src="/logos/github.svg" width={20} height={20} />
                                         Continue with GitHub
@@ -140,7 +105,7 @@ export function LoginForm() {
                                         disabled={isLoading} 
                                         className="w-full" 
                                         type="button"
-                                        onClick={handleGoogleLogin}
+                                        onClick={() => handleSocialLogin("google")}
                                     >
                                         <Image alt="Google" src="/logos/google.svg" width={20} height={20} />
                                         Continue with Google

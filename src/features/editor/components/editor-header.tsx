@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -15,17 +15,38 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useSuspenseWorkflow } from "@/features/workflows/hooks/use-workflow";
-import { useUpdateWorkflowName } from "@/features/workflows/hooks/use-workflow";
+import {
+  useUpdateWorkflow,
+  useUpdateWorkflowName,
+} from "@/features/workflows/hooks/use-workflow";
 
+import { useAtomValue } from "jotai";
+import { editorAtom } from "@/features/editor/store/atoms";
 
 export const EditorSaveButton = ({ workflowId }: { workflowId: string }) => {
+  const editor = useAtomValue(editorAtom);
+  const saveWorkflow = useUpdateWorkflow();
+
+  const handleSave = () => {
+    if (!editor) {
+      return;
+    }
+    const nodes = editor.getNodes();
+    const edges = editor.getEdges();
+
+    saveWorkflow.mutateAsync({
+      id: workflowId,
+      nodes,
+      edges,
+    });
+  };
+
   return (
     <div className="ml-auto flex items-center gap-2">
-      <Button size="sm" onClick={() => {}} disabled={false}>
+      <Button size="sm" onClick={handleSave} disabled={saveWorkflow.isPending}>
         <SaveIcon className="size-4 mr-2" />
         Save
       </Button>
-      
     </div>
   );
 };
@@ -75,8 +96,7 @@ export const EditorNameInput = ({ workflowId }: { workflowId: string }) => {
     }
   };
 
-  // Fixed: Show editable input when isEditing is TRUE
-  if (isEditing) {
+  if (!isEditing) {
     return (
       <Input
         disabled={updateWorkflowName.isPending}
@@ -85,12 +105,12 @@ export const EditorNameInput = ({ workflowId }: { workflowId: string }) => {
         onKeyDown={handleKeyDown}
         onChange={(e) => setName(e.target.value)}
         onBlur={handleSave}
+        readOnly
         className="h-7 w-auto min-w-[100px] px-2"
       />
     );
   }
 
-  // Fixed: Show clickable breadcrumb when isEditing is FALSE
   return (
     <BreadcrumbItem
       onClick={() => setIsEditing(true)}

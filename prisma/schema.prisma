@@ -8,17 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String     @id
-  name          String
-  email         String     @unique
-  emailVerified Boolean    @default(false)
-  image         String?
-  polarCustomerId String?   // Add this field
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @default(now()) @updatedAt
-  workflows     Workflow[]
-  accounts      Account[]
-  sessions      Session[]
+  id              String     @id
+  name            String
+  email           String     @unique
+  emailVerified   Boolean    @default(false)
+  image           String?
+  polarCustomerId String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
+  workflows       Workflow[]
+  accounts        Account[]
+  sessions        Session[]
 
   @@map("user")
 }
@@ -94,7 +94,7 @@ model Node {
 
 model Connection {
   id         String   @id @default(cuid())
-  workflow   String
+  workflowId String
   fromNodeId String
   toNodeId   String
   fromOutput String   @default("main")
@@ -103,7 +103,7 @@ model Connection {
   updatedAt  DateTime @default(now()) @updatedAt
   fromNode   Node     @relation("FromNode", fields: [fromNodeId], references: [id], onDelete: Cascade)
   toNode     Node     @relation("ToNode", fields: [toNodeId], references: [id], onDelete: Cascade)
-  Workflow   Workflow @relation(fields: [workflow], references: [id], onDelete: Cascade)
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
 
   @@unique([fromNodeId, fromOutput, toNodeId, toInput])
 }
