@@ -35,35 +35,7 @@ PostgreSQL database
 1. Install dependencies
 pnpm install
 
-2. Configure environment variables
 
-Create a .env file in the project root (copy from .env.example if available) and set:
-
-# ─────── ENVIRONMENT VARIABLES ───────
-
-# ── AI Provider Keys ──
-GOOGLE_GENERATIVE_AI_API_KEY=
-ANTHROPIC_API_KEY=
-OPENAI_API_KEY=
-
-# ── Authentication & App Config ──
-BETTER_AUTH_SECRET=
-BETTER_AUTH_URL=http://localhost:3000
-NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
-
-# ── Payment & Subscription ──
-POLAR_ACCESS_TOKEN=
-POLAR_PRO_PRODUCT_ID=
-POLAR_SUCCESS_URL=http://localhost:3000
-
-# ── Database ──
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/your_database"
-
-# ── Sentry Monitoring ──
-SENTRY_AUTH_TOKEN=
-NEXT_PUBLIC_SENTRY_DSN=
-SENTRY_ORG=
-SENTRY_PROJECT=
 # Nodebase — Next.js Workflow App Starter
 
 A Next.js (App Router) starter kit for building workflow-driven applications. This repository includes modern integrations for AI providers, background jobs, and type-safe APIs.
